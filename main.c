@@ -9,6 +9,6 @@ int tttshowboard(){
 }
 
 int main() {
-    printf("Hello Worldasda\n");
+    printf("Hello World\n");
     return 0;
 }
