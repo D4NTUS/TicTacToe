@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <termios.h>
 #include <unistd.h>
+#include <time.h>
 
 #define X_WON 1
 #define O_WON 2
@@ -25,6 +26,20 @@ int getch(void) {                           //getch from net :p
     ch = getchar();
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     return ch;
+}
+
+int can_be_placed(char A[3], char B[3], char C[3], int i) {
+    int can_go = 0;
+    if((i==1) && ((A[1] == '1') || (A[1] == '7'))) can_go = 1;
+    if((i==2) && ((A[2] == '2') || (A[2] == '8'))) can_go = 1;
+    if((i==3) && ((A[3] == '3') || (A[3] == '9'))) can_go = 1;
+    if((i==4) && (B[1] == '4')) can_go = 1;
+    if((i==5) && (B[2] == '5')) can_go = 1;
+    if((i==6) && (B[3] == '6')) can_go = 1;
+    if((i==7) && ((C[1] == '7') || (C[1] == '1'))) can_go = 1;
+    if((i==8) && ((C[2] == '8') || (C[2] == '2'))) can_go = 1;
+    if((i==9) && ((C[3] == '9') || (C[3] == '3'))) can_go = 1;
+    return can_go;
 }
 
 int ttt_show_board(char A[3], char B[3], char C[3]) {
@@ -258,14 +273,57 @@ int singleplayer_menu(int menu_choice) {
     return menu_choice;
 }
 
+int multiplayer(char A[3], char B[3], char C[3]) {
+    int SA[] = {0,0,0};
+    int SB[] = {0,0,0};
+    int SC[] = {0,0,0};
+    srand(time(0));
+    int who_goes = rand() % 2;
+    int game_ongoing = 1;
+    int i = 0;
+    while(game_ongoing == 1){
+        if(who_goes == 1){
+            ttt_show_board( A, B, C);
+            printf("Its O's turn\n");
+            i = getch();
+            int can_go = can_be_placed( A, B, C, i);
+            if(can_go == 1){
+                //place
+            }
+            else{
+                ttt_show_board( A, B, C);
+                printf("Enter a place that is not occuppied !\n");
+                printf("Its O's turn\n");
+            }
+        }
+        else{
+            ttt_show_board(A,B,C);
+            printf("Its X's turn\n");
+            i = getch();
+            int can_go = can_be_placed( A, B, C, i);
+            if(can_go == 1){
+                //place
+            }
+            else{
+                ttt_show_board( A, B, C);
+                printf("Enter a place that is not occuppied !\n");
+                printf("Its X's turn\n");
+            }
+        }
+    }
+    int result = ttt_won(SA,SB,SC);
+
+    if(result == X_WON) printf("X has won!\n");
+    else if(result == O_WON) printf("O has won!\n");
+    else if(result == DRAW) printf("Draw!\n");
+    return 0;
+}
+
 int main() {
     char A[] = {'1','2','3'};
     char B[] = {'4','5','6'};
     char C[] = {'7','8','9'};
 
-    int SA[] = {0,0,0};
-    int SB[] = {0,0,0};
-    int SC[] = {0,0,0};
     int game_running = 1;
     while(game_running == 1){
         int menu_choice = 4;         // 4 = singleplayer, 3 = multiplayer, 2 = settings, 1 = quit
@@ -288,19 +346,21 @@ int main() {
             }
         }
         else if(menu_choice == 3){
+            multiplayer(A,B,C);
         }
         else if(menu_choice == 4){
             menu_choice = 4;
             menu_choice = singleplayer_menu(menu_choice);
+            if(menu_choice == 4){
+                //easy random
+            }
+            else if(menu_choice == 3){
+                //medium
+            }
+            else if(menu_choice == 2){
+                //hard
+            }
         }
-
-        ttt_show_board(A,B,C);
-
-        int result = ttt_won(SA,SB,SC);
-
-        if(result == X_WON) printf("X has won!\n");
-        else if(result == O_WON) printf("O has won!\n");
-        else if(result == DRAW) printf("Draw!\n");
     }
     return 0;
 }
