@@ -3,13 +3,17 @@
 #include <termios.h>
 #include <unistd.h>
 
-int ttt_show_board(){
-    char A1='A',A2='A',A3='A',B1='A',B2='A',B3='A',C1='A',C2='A',C3='A';
-    system("clear");
-	printf("Tic Tac Toe\n");
 #define X_WON 1
 #define O_WON 2
 #define DRAW   3
+
+void clear_screen() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
 
 int getch(void) {                           //getch from net :p
     struct termios oldt, newt;
@@ -24,21 +28,18 @@ int getch(void) {                           //getch from net :p
 }
 
 int ttt_show_board(char A[3], char B[3], char C[3]) {
-    system("clear");  // use "cls" if Windows
+    clear_screen();
     printf("Tic Tac Toe\n");
     printf(" _____ _____ _____\n");
     printf("|     |     |     |\n");
-    printf("|  %c  |  %c  |  %c  |\n",A1,A2,A3);
     printf("|  %c  |  %c  |  %c  |\n", A[0], A[1], A[2]);
     printf("|     |     |     |\n");
     printf(" _____ _____ _____\n");
     printf("|     |     |     |\n");
-    printf("|  %c  |  %c  |  %c  |\n",B1,B2,B3);
     printf("|  %c  |  %c  |  %c  |\n", B[0], B[1], B[2]);
     printf("|     |     |     |\n");
     printf(" _____ _____ _____\n");
     printf("|     |     |     |\n");
-    printf("|  %c  |  %c  |  %c  |\n",C1,C2,C3);
     printf("|  %c  |  %c  |  %c  |\n", C[0], C[1], C[2]);
     printf("|     |     |     |\n");
     printf(" _____ _____ _____\n");
@@ -77,8 +78,8 @@ int ttt_won(int A[3], int B[3], int C[3]) {
     return 0;
 }
 
-int ttt_menu(int menu_choice[2], int menu_selected) {
-    system("cls");
+int menu_main(int menu_choice) {
+    clear_screen();
     printf("-----     -----         -----  -----  -----         -----  -----  -----\n");
     printf("  |    | |      	  |   |     ||	              |	  |     ||\n");
     printf("  |    | |                |   |-----||		      |   |   	||-----\n");
@@ -90,15 +91,15 @@ int ttt_menu(int menu_choice[2], int menu_selected) {
     while (i != '\n') {
         i = getch();
         if (i == 'w' || i == 'W') {
-            menu_choice[0]++;
-            if (menu_choice[0] > 4) menu_choice[0] = 4;
+            menu_choice++;
+            if (menu_choice > 4) menu_choice = 4;
         }
         else if (i == 's' || i == 'S') {
-            menu_choice[0]--;
-            if (menu_choice[0] < 1) menu_choice[0] = 1;
+            menu_choice--;
+            if (menu_choice < 1) menu_choice = 1;
         }
-        if(menu_choice[0] == 4){
-            system("cls");
+        if(menu_choice == 4){
+            clear_screen();
 	        printf("-----     -----         -----  -----  -----         -----  -----  -----\n");
             printf("  |    | |      	  |   |     ||	              |	  |     ||\n");
             printf("  |    | |                |   |-----||		      |   |   	||-----\n");
@@ -107,8 +108,8 @@ int ttt_menu(int menu_choice[2], int menu_selected) {
             printf(" --------------- \n|  Singleplayer |\n --------------- \n   Multiplayer  \n\n     Settings\n\n      Quit     ");
 	        printf("\n\n----------------------------------------------------------------------------------------------------\nYou play with an Algorithm.");
         }
-        if(menu_choice[0] == 3){
-            system("cls");
+        if(menu_choice == 3){
+            clear_screen();
 	        printf("-----     -----         -----  -----  -----         -----  -----  -----\n");
             printf("  |    | |      	  |   |     ||	              |	  |     ||\n");
             printf("  |    | |                |   |-----||		      |   |   	||-----\n");
@@ -117,8 +118,8 @@ int ttt_menu(int menu_choice[2], int menu_selected) {
             printf("   Singleplayer\n --------------- \n|  Multiplayer  |\n --------------- \n     Settings\n\n      Quit     ");
 	        printf("\n\n----------------------------------------------------------------------------------------------------\nYou play with another person on the same computer.");
         }
-        if(menu_choice[0] == 2){
-            system("cls");
+        if(menu_choice == 2){
+            clear_screen();
 	        printf("-----     -----         -----  -----  -----         -----  -----  -----\n");
             printf("  |    | |      	  |   |     ||	              |	  |     ||\n");
             printf("  |    | |                |   |-----||		      |   |   	||-----\n");
@@ -127,8 +128,8 @@ int ttt_menu(int menu_choice[2], int menu_selected) {
             printf("   Singleplayer\n\n   Multiplayer  \n --------------- \n|    Settings   |\n --------------- \n      Quit     ");
 	        printf("\n\n----------------------------------------------------------------------------------------------------\nYou can choose what input you want to use.");
         }
-        if(menu_choice[0] == 1){
-            system("cls");
+        if(menu_choice == 1){
+            clear_screen();
 	        printf("-----     -----         -----  -----  -----         -----  -----  -----\n");
             printf("  |    | |      	  |   |     ||	              |	  |     ||\n");
             printf("  |    | |                |   |-----||		      |   |   	||-----\n");
@@ -138,12 +139,126 @@ int ttt_menu(int menu_choice[2], int menu_selected) {
 	        printf("\n----------------------------------------------------------------------------------------------------\nYou will just leave , what more to expect :D.");
         }
     }
-    return menu_selected = menu_choice[0];
+    return menu_choice;
 }
 
+int menu_settings(int menu_choice) {
+    clear_screen();
+	printf(" --------------- \n|    Numpad     |\n --------------- \n    Keyboard\n\n      Back");
+	printf("\n\n----------------------------------------------------------------------------------------------------\n");
+    printf("Layout : \n");
+    printf(" _____ _____ _____\n");
+    printf("|     |     |     |\n");
+    printf("|  7  |  8  |  9  |\n");
+    printf("|     |     |     |\n");
+    printf(" _____ _____ _____\n");
+    printf("|     |     |     |\n");
+    printf("|  4  |  5  |  6  |\n");
+    printf("|     |     |     |\n");
+    printf(" _____ _____ _____\n");
+    printf("|     |     |     |\n");
+    printf("|  1  |  2  |  3  |\n");
+    printf("|     |     |     |\n");
+    printf(" _____ _____ _____\n");
+    int i = 0;
+    while (i != '\n') {
+        i = getch();
+        if (i == 'w' || i == 'W') {
+            menu_choice++;
+            if (menu_choice > 3) menu_choice = 3;
+        }
+        else if (i == 's' || i == 'S') {
+            menu_choice--;
+            if (menu_choice < 1) menu_choice = 1;
+        }
+        if(menu_choice == 3){
+            clear_screen();
+		    printf(" --------------- \n|    Numpad     |\n --------------- \n    Keyboard\n\n      Back");
+	        printf("\n\n----------------------------------------------------------------------------------------------------\n");
+            printf("Layout : \n");
+            printf(" _____ _____ _____\n");
+            printf("|     |     |     |\n");
+            printf("|  7  |  8  |  9  |\n");
+            printf("|     |     |     |\n");
+            printf(" _____ _____ _____\n");
+            printf("|     |     |     |\n");
+            printf("|  4  |  5  |  6  |\n");
+            printf("|     |     |     |\n");
+            printf(" _____ _____ _____\n");
+            printf("|     |     |     |\n");
+            printf("|  1  |  2  |  3  |\n");
+            printf("|     |     |     |\n");
+            printf(" _____ _____ _____\n");
+        }
+        if(menu_choice == 2){
+            clear_screen();
+	        printf("\n     Numpad\n --------------- \n|   Keyboard    |\n --------------- \n      Back");
+	        printf("\n\n----------------------------------------------------------------------------------------------------\n");
+            printf("Layout : \n");
+            printf(" _____ _____ _____\n");
+            printf("|     |     |     |\n");
+            printf("|  1  |  2  |  3  |\n");
+            printf("|     |     |     |\n");
+            printf(" _____ _____ _____\n");
+            printf("|     |     |     |\n");
+            printf("|  4  |  5  |  6  |\n");
+            printf("|     |     |     |\n");
+            printf(" _____ _____ _____\n");
+            printf("|     |     |     |\n");
+            printf("|  7  |  8  |  9  |\n");
+            printf("|     |     |     |\n");
+            printf(" _____ _____ _____\n");
+        }
+        if(menu_choice == 1){
+            clear_screen();
+	        printf("\n     Numpad\n\n    Keyboard\n --------------- \n|     Back      |\n --------------- ");
+	        printf("\n----------------------------------------------------------------------------------------------------\n");
+            printf("Back to main menu.");
+	    }
+    }
+    return menu_choice;
+}
+
+int singleplayer_menu(int menu_choice) {
+    clear_screen();
+	printf(" --------------- \n|     Easy      |\n --------------- \n     Medium\n\n      Hard\n\n      Back");
+	printf("\n\n----------------------------------------------------------------------------------------------------\nEvery choose is random.");
+    int i = 0;
+    while (i != '\n') {
+        i = getch();
+        if (i == 'w' || i == 'W') {
+            menu_choice++;
+            if (menu_choice > 4) menu_choice = 4;
+        }
+        else if (i == 's' || i == 'S') {
+            menu_choice--;
+            if (menu_choice < 1) menu_choice = 1;
+        }
+        if(menu_choice == 4){
+            clear_screen();
+	        printf(" --------------- \n|     Easy      |\n --------------- \n     Medium\n\n      Hard\n\n      Back");
+	        printf("\n\n----------------------------------------------------------------------------------------------------\nEvery choose is random.");
+        }
+        if(menu_choice == 3){
+            clear_screen();
+	        printf("\n      Easy\n --------------- \n|    Medium     |\n --------------- \n      Hard\n\n      Back");
+	        printf("\n\n----------------------------------------------------------------------------------------------------\nAlmost like hard mod except you start fist.");
+        }
+        if(menu_choice == 2){
+            clear_screen();
+            printf("\n      Easy\n\n     Medium\n --------------- \n|     Hard      |\n --------------- \n      Back");
+	        printf("\n\n----------------------------------------------------------------------------------------------------\nIt uses complicated algorithm to win.");
+	    }
+        if(menu_choice == 1){
+            clear_screen();
+	        printf("\n      Easy\n\n     Medium\n\n      Hard\n --------------- \n|     Back      |\n --------------- ");
+	        printf("\n----------------------------------------------------------------------------------------------------\nBack to main menu.");
+	    }
+    }
+    return menu_choice;
+}
 
 int main() {
-    printf("Hello World\n");
     char A[] = {'1','2','3'};
     char B[] = {'4','5','6'};
     char C[] = {'7','8','9'};
@@ -151,21 +266,41 @@ int main() {
     int SA[] = {0,0,0};
     int SB[] = {0,0,0};
     int SC[] = {0,0,0};
+    int game_running = 1;
+    while(game_running == 1){
+        int menu_choice = 4;         // 4 = singleplayer, 3 = multiplayer, 2 = settings, 1 = quit
+        menu_choice = menu_main(menu_choice);
+        if(menu_choice == 1){
+            game_running = 0;
+        }
+        else if(menu_choice == 2) {
+            menu_choice = 3;
+            menu_choice = menu_settings(menu_choice);
+            if(menu_choice == 2){
+                A[0] = '1'; A[1] = '2'; A[2] = '3';
+                B[0] = '4'; B[1] = '5'; B[2] = '6';
+                C[0] = '7'; C[1] = '8'; C[2] = '9';
+            }
+            else if(menu_choice == 3){
+                A[0] = '7'; A[1] = '8'; A[2] = '9';
+                B[0] = '4'; B[1] = '5'; B[2] = '6';
+                C[0] = '1'; C[1] = '2'; C[2] = '3';
+            }
+        }
+        else if(menu_choice == 3){
+        }
+        else if(menu_choice == 4){
+            menu_choice = 4;
+            menu_choice = singleplayer_menu(menu_choice);
+        }
 
-    int menu_choice[] = {4, 0};
-    int menu_selected = 0;
-    while(menu_selected  != 1){
-    ttt_menu(menu_choice, menu_selected);
+        ttt_show_board(A,B,C);
+
+        int result = ttt_won(SA,SB,SC);
+
+        if(result == X_WON) printf("X has won!\n");
+        else if(result == O_WON) printf("O has won!\n");
+        else if(result == DRAW) printf("Draw!\n");
     }
-    menu_selected = 0;   // 4 = singleplayer, 3 = multiplayer, 2 = settings, 1 = quit
-
-    ttt_show_board(A,B,C);
-
-    int result = ttt_won(SA,SB,SC);
-
-    if(result == X_WON) printf("X has won!\n");
-    else if(result == O_WON) printf("O has won!\n");
-    else if(result == DRAW) printf("Draw!\n");
-
     return 0;
 }
