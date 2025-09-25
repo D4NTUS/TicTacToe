@@ -6,7 +6,7 @@
 
 #define X_WON 1
 #define O_WON 2
-#define DRAW   3
+#define DRAW 3
 
 void clear_screen() {
 #ifdef _WIN32
@@ -28,18 +28,17 @@ int getch(void) {                           //getch from net :p
     return ch;
 }
 
-int can_be_placed(char A[3], char B[3], char C[3], int i) {
-    int can_go = 0;
-    if((i==1) && ((A[1] == '1') || (A[1] == '7'))) can_go = 1;
-    if((i==2) && ((A[2] == '2') || (A[2] == '8'))) can_go = 1;
-    if((i==3) && ((A[3] == '3') || (A[3] == '9'))) can_go = 1;
-    if((i==4) && (B[1] == '4')) can_go = 1;
-    if((i==5) && (B[2] == '5')) can_go = 1;
-    if((i==6) && (B[3] == '6')) can_go = 1;
-    if((i==7) && ((C[1] == '7') || (C[1] == '1'))) can_go = 1;
-    if((i==8) && ((C[2] == '8') || (C[2] == '2'))) can_go = 1;
-    if((i==9) && ((C[3] == '9') || (C[3] == '3'))) can_go = 1;
-    return can_go;
+void place(char A[3], char B[3], char C[3], char who_goes, int input) {
+    for(int i = 0; i < 10; i++){
+        if((input==i) && ((A[i] != 'X') || (A[i] != 'O'))){
+            A[i] = who_goes;
+        }
+        else{
+            ttt_show_board( A, B, C);
+            printf("Its O's turn\n");
+            printf("Its O's turn\n");
+        }
+    }
 }
 
 int ttt_show_board(char A[3], char B[3], char C[3]) {
@@ -278,37 +277,24 @@ int multiplayer(char A[3], char B[3], char C[3]) {
     int SB[] = {0,0,0};
     int SC[] = {0,0,0};
     srand(time(0));
-    int who_goes = rand() % 2;
+    int random = rand() % 2;
+    char who_goes;
+    if (random == 1) who_goes = 'O';
+    else who_goes = 'X';
     int game_ongoing = 1;
-    int i = 0;
+    int input = 0;
     while(game_ongoing == 1){
-        if(who_goes == 1){
+        if(who_goes == 'O'){
             ttt_show_board( A, B, C);
             printf("Its O's turn\n");
-            i = getch();
-            int can_go = can_be_placed( A, B, C, i);
-            if(can_go == 1){
-                //place
-            }
-            else{
-                ttt_show_board( A, B, C);
-                printf("Enter a place that is not occuppied !\n");
-                printf("Its O's turn\n");
-            }
+            input = getch();
+            place( A, B, C, who_goes, input);
         }
         else{
             ttt_show_board(A,B,C);
             printf("Its X's turn\n");
-            i = getch();
-            int can_go = can_be_placed( A, B, C, i);
-            if(can_go == 1){
-                //place
-            }
-            else{
-                ttt_show_board( A, B, C);
-                printf("Enter a place that is not occuppied !\n");
-                printf("Its X's turn\n");
-            }
+            input = getch();
+            place( A, B, C, who_goes, input);
         }
     }
     int result = ttt_won(SA,SB,SC);
@@ -323,7 +309,6 @@ int main() {
     char A[] = {'1','2','3'};
     char B[] = {'4','5','6'};
     char C[] = {'7','8','9'};
-
     int game_running = 1;
     while(game_running == 1){
         int menu_choice = 4;         // 4 = singleplayer, 3 = multiplayer, 2 = settings, 1 = quit
