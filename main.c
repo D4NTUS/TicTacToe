@@ -55,37 +55,34 @@ int place(char A[3], char B[3], char C[3], char who_goes, int input) {
             else who_goes = 'X';
             return who_goes;
         }
-        else{
-            ttt_show_board( A, B, C);
-            printf("Its O's turn\n");
-            printf("Its O's turn\n");
-            return 1;
-        }
     }
-    return 0;
+    ttt_show_board( A, B, C);
+    printf("Its O's turn\n");
+    printf("Its O's turn\n");
+    return 1;
 }
 
-int ttt_won(int A[3], int B[3], int C[3]) {
+int ttt_won(char A[3], char B[3], char C[3]) {
     // X checks
-    if ((A[0]==1 && A[1]==1 && A[2]==1) ||
-        (B[0]==1 && B[1]==1 && B[2]==1) ||
-        (C[0]==1 && C[1]==1 && C[2]==1) ||
-        (A[0]==1 && B[0]==1 && C[0]==1) ||
-        (A[1]==1 && B[1]==1 && C[1]==1) ||
-        (A[2]==1 && B[2]==1 && C[2]==1) ||
-        (A[0]==1 && B[1]==1 && C[2]==1) ||
-        (A[2]==1 && B[1]==1 && C[0]==1))
+    if ((A[0]=='X' && A[1]=='X' && A[2]=='X') ||
+        (B[0]=='X' && B[1]=='X' && B[2]=='X') ||
+        (C[0]=='X' && C[1]=='X' && C[2]=='X') ||
+        (A[0]=='X' && B[0]=='X' && C[0]=='X') ||
+        (A[1]=='X' && B[1]=='X' && C[1]=='X') ||
+        (A[2]=='X' && B[2]=='X' && C[2]=='X') ||
+        (A[0]=='X' && B[1]=='X' && C[2]=='X') ||
+        (A[2]=='X' && B[1]=='X' && C[0]=='X'))
         return X_WON;
 
     // O checks
-    if ((A[0]==2 && A[1]==2 && A[2]==2) ||
-        (B[0]==2 && B[1]==2 && B[2]==2) ||
-        (C[0]==2 && C[1]==2 && C[2]==2) ||
-        (A[0]==2 && B[0]==2 && C[0]==2) ||
-        (A[1]==2 && B[1]==2 && C[1]==2) ||
-        (A[2]==2 && B[2]==2 && C[2]==2) ||
-        (A[0]==2 && B[1]==2 && C[2]==2) ||
-        (A[2]==2 && B[1]==2 && C[0]==2))
+    if ((A[0]=='O' && A[1]=='O' && A[2]=='O') ||
+        (B[0]=='O' && B[1]=='O' && B[2]=='O') ||
+        (C[0]=='O' && C[1]=='O' && C[2]=='O') ||
+        (A[0]=='O' && B[0]=='O' && C[0]=='O') ||
+        (A[1]=='O' && B[1]=='O' && C[1]=='O') ||
+        (A[2]=='O' && B[2]=='O' && C[2]=='O') ||
+        (A[0]=='O' && B[1]=='O' && C[2]=='O') ||
+        (A[2]=='O' && B[1]=='O' && C[0]=='O'))
         return O_WON;
 
     // Draw check
@@ -278,9 +275,6 @@ int singleplayer_menu(int menu_choice) {
 }
 
 int multiplayer(char A[3], char B[3], char C[3]) {
-    int SA[] = {0,0,0};
-    int SB[] = {0,0,0};
-    int SC[] = {0,0,0};
     srand(time(0));
     int random = rand() % 2;
     char who_goes;
@@ -302,7 +296,7 @@ int multiplayer(char A[3], char B[3], char C[3]) {
             place( A, B, C, who_goes, input);
         }
     }
-    int result = ttt_won(SA,SB,SC);
+    int result = ttt_won(A,B,C);
 
     if(result == X_WON) printf("X has won!\n");
     else if(result == O_WON) printf("O has won!\n");
