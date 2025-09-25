@@ -28,19 +28,6 @@ int getch(void) {                           //getch from net :p
     return ch;
 }
 
-void place(char A[3], char B[3], char C[3], char who_goes, int input) {
-    for(int i = 0; i < 10; i++){
-        if((input==i) && ((A[i] != 'X') || (A[i] != 'O'))){
-            A[i] = who_goes;
-        }
-        else{
-            ttt_show_board( A, B, C);
-            printf("Its O's turn\n");
-            printf("Its O's turn\n");
-        }
-    }
-}
-
 int ttt_show_board(char A[3], char B[3], char C[3]) {
     clear_screen();
     printf("Tic Tac Toe\n");
@@ -57,6 +44,24 @@ int ttt_show_board(char A[3], char B[3], char C[3]) {
     printf("|  %c  |  %c  |  %c  |\n", C[0], C[1], C[2]);
     printf("|     |     |     |\n");
     printf(" _____ _____ _____\n");
+    return 0;
+}
+
+int place(char A[3], char B[3], char C[3], char who_goes, int input) {
+    for(int i = 0; i < 10; i++){
+        if((input==i) && ((A[i] != 'X') || (A[i] != 'O'))){
+            A[i] = who_goes;
+            if (who_goes == 'X') who_goes = 'O';
+            else who_goes = 'X';
+            return who_goes;
+        }
+        else{
+            ttt_show_board( A, B, C);
+            printf("Its O's turn\n");
+            printf("Its O's turn\n");
+            return 1;
+        }
+    }
     return 0;
 }
 
